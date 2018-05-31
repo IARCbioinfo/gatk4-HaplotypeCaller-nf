@@ -1,7 +1,7 @@
 # gatk4-HaplotypeCaller-nf
-GATK4 HaplotypeCaller step, in gVCF mode, first step for subsequent whole cohort Joint Genotyping, following in GATK [Best Practices](https://software.broadinstitute.org/gatk/best-practices/workflow?id=11145) (step Call Variant Per-Sample).
+GATK4 HaplotypeCaller step, in gVCF mode, first step for subsequent whole cohort Joint Genotyping, following in GATK [Best Practices](https://software.broadinstitute.org/gatk/best-practices/workflow?id=11145) (step Call Variants Per-Sample).
 
-<img src="https://us.v-cdn.net/5019796/uploads/editor/mz/tzm69d8e2spl.png" width="600" />
+<img src="https://us.v-cdn.net/5019796/uploads/editor/mz/tzm69d8e2spl.png" width="800" />
 
 
 ## Description
