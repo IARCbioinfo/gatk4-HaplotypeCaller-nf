@@ -25,6 +25,6 @@ A nextflow.config is also included, modify for suitability outside our pre-confi
 
 ## Usage for Cobalt cluster
 ```
-nextflow run iarcbioinfo/gatk4-HaplotypeCaller.nf -profile cobalt --input "/data/test_*.bam" --output_dir myGVCFs --ref_fasta /ref/Homo_sapiens_assembly38.fasta --gatk_jar /bin/gatk-4.0.4.0/gatk --interval_list target.list
+nextflow run iarcbioinfo/gatk4-HaplotypeCaller.nf -profile cobalt --input "/data/test_*.bam" --output_dir myGVCFs --ref_fasta /ref/Homo_sapiens_assembly38.fasta --gatk_exec /bin/gatk-4.0.4.0/gatk --interval_list target.list
 ```
 
