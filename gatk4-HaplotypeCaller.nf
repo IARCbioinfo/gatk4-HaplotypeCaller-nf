@@ -74,16 +74,26 @@ process SplitIntervals {
 	time '1h'
 
     input:
+    file genome from ref
 	interList
 
 	output:
 	file "scatter/*-scattered.intervals" into interval_ch
+	file "${genome}.fai" into faidx_ch
+	file "${genome.baseName}.dict" into dict_ch
 
 	script:
 	"""
-    ${GATK} --java-options "-Xmx4g -Xms4g" \
+    samtools faidx ${genome}
+
+    java -jar \$PICARD_TOOLS_LIBDIR/picard.jar \
+    CreateSequenceDictionary \
+    R=${genome} \
+    O=${genome.baseName}.dict
+
+	${GATK} --java-options "-Xmx4g -Xms4g" \
      SplitIntervals \
-		-R ${ref} \
+		-R ${genome} \
 		-L ${interList} \
 		--subdivision-mode BALANCING_WITHOUT_INTERVAL_SUBDIVISION \
 		--scatter-count 10 \
@@ -105,6 +115,9 @@ process HaplotypeCaller {
 	tag { bamID+"-"+file(Interval) }
 	
     input:
+    file genome from ref
+    file faidx from faidx_ch
+    file dict from dict_ch
 	set bamID, file(bam), file(Interval) from bam_ch.spread(interval_ch)
 
 	output:
@@ -116,7 +129,7 @@ process HaplotypeCaller {
 	"""
     ${GATK} --java-options "-Xmx8g -Xms8g" \
 		HaplotypeCaller \
-		-R ${ref} \
+		-R ${genome} \
 		-I ${bam} \
 		-O ${bamID}.${int_tag}.g.vcf \
 		-L ${Interval} \
