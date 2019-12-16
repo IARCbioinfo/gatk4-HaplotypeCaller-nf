@@ -19,6 +19,7 @@ Small pipeline to call recalibrated BAM, on a per sample basis, and store the gV
 - `--output_dir` : the folder that will contain your test_123.gVCF file or your test_001.gVCF, test_002.gVCF, ... files.
 - `--ref_fasta` : your reference in FASTA. Of course, be sure it is compatible (or the same) with the one that aligned your BAM file(s).
 - `--gatk_exec` : the full path to your GATK4 binary file.
+- `--picard_dir` : directory that contains `picard.jar`
 - `--interval_list` : a file for the intervals to call on. [More information on interval_list format](https://gatkforums.broadinstitute.org/gatk/discussion/1319/collected-faqs-about-interval-lists).
 
 A nextflow.config is also included, modify for suitability outside our pre-configured clusters ([see Nexflow configuration](https://www.nextflow.io/docs/latest/config.html#configuration-file)).

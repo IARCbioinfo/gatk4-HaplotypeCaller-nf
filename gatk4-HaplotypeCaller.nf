@@ -40,7 +40,8 @@ if (params.help)
     log.info "--input                         BAM FILE                    Aligned BAM file (between quotes for BAMs)"
     log.info "--output_dir                    OUTPUT FOLDER               Output for gVCF file"
     log.info "--ref_fasta                     FASTA FILE                  Reference FASTA file"
-    log.info "--gatk_exec                     BIN PATH                  Full path to GATK4 executable"
+    log.info "--gatk_exec                     BIN PATH                    Full path to GATK4 executable"
+    log.info "--picard_dir                    BIN DIRECTORY               Directory containing Picard Tools jar file"
     log.info "--interval_list                 INTERVAL_LIST FILE          Interval.list file For target"
     exit 1
 }
@@ -52,6 +53,7 @@ params.input         = null
 params.output_dir    = "."
 params.ref_fasta     = null
 params.gatk_exec     = null
+params.picard_dir    = null
 params.interval_list = null
 
 //
@@ -61,6 +63,7 @@ bam_ch    = Channel
 			.fromPath(params.input)
 			.map { file -> tuple(file.baseName, file) }
 GATK      = params.gatk_exec
+PICARD    = params.picard_dir + "/picard.jar"
 ref       = file(params.ref_fasta)
 interList = file(params.interval_list)
 
@@ -78,7 +81,7 @@ process SplitIntervals {
 	interList
 
 	output:
-	file "scatter/*-scattered.intervals" into interval_ch
+	file "scatter/*-scattered.interval_list" into interval_ch
 	file "${genome}.fai" into faidx_ch
 	file "${genome.baseName}.dict" into dict_ch
 
@@ -86,13 +89,13 @@ process SplitIntervals {
 	"""
     samtools faidx ${genome}
 
-    java -jar \$PICARD_TOOLS_LIBDIR/picard.jar \
+    java -jar ${PICARD} \
     CreateSequenceDictionary \
     R=${genome} \
     O=${genome.baseName}.dict
 
-	${GATK} --java-options "-Xmx4g -Xms4g" \
-     SplitIntervals \
+    ${GATK} --java-options "-Xmx4g -Xms4g" \
+    SplitIntervals \
 		-R ${genome} \
 		-L ${interList} \
 		--subdivision-mode BALANCING_WITHOUT_INTERVAL_SUBDIVISION \
